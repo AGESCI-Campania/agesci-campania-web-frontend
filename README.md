@@ -25,7 +25,7 @@ inoltra il traffico ai progetti (Sestante, Plancia, …) tramite la rete Docker 
 Da eseguire per primo, prima di qualunque altro progetto:
 
 ```bash
-git clone git@github.com:AGESCI-Campania/agesci-campania-web-frontend.git /opt/agesci-campania-web-frontend
+git clone https://github.com/AGESCI-Campania/agesci-campania-web-frontend.git /opt/agesci-campania-web-frontend
 /opt/agesci-campania-web-frontend/scripts/installa.sh
 ```
 
@@ -41,12 +41,9 @@ sottodomini puntato al server.
 ## Collegare un nuovo progetto
 
 Vedi [`docs/INTEGRAZIONE.md`](docs/INTEGRAZIONE.md). Per farlo leggere a un agente Claude
-Code che lavora in un altro repo:
+Code che lavora in un altro repo, indicargli questo URL:
 
-```bash
-gh api repos/AGESCI-Campania/agesci-campania-web-frontend/contents/docs/INTEGRAZIONE.md \
-  -H "Accept: application/vnd.github.raw"
-```
+<https://raw.githubusercontent.com/AGESCI-Campania/agesci-campania-web-frontend/main/docs/INTEGRAZIONE.md>
 
 ## Licenza
 

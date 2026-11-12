@@ -7,12 +7,8 @@ Docker Compose, nginx, impostazioni HTTP/HTTPS o script di deploy di un progetto
 
 Sorgente: `docs/INTEGRAZIONE.md` nel repo
 [`AGESCI-Campania/agesci-campania-web-frontend`](https://github.com/AGESCI-Campania/agesci-campania-web-frontend).
-Il repo è privato: da un altro progetto leggerlo con
-
-```bash
-gh api repos/AGESCI-Campania/agesci-campania-web-frontend/contents/docs/INTEGRAZIONE.md \
-  -H "Accept: application/vnd.github.raw"
-```
+Versione sempre aggiornata, leggibile senza autenticazione:
+<https://raw.githubusercontent.com/AGESCI-Campania/agesci-campania-web-frontend/main/docs/INTEGRAZIONE.md>
 
 ---
 
