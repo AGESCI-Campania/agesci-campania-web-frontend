@@ -1,0 +1,7 @@
+# Segreti — non committare mai
+.env
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

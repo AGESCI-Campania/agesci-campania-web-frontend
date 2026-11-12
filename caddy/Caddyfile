@@ -1,0 +1,25 @@
+# Caddyfile — reverse proxy unico per le piattaforme *.agescicampania.org
+#
+# Ogni piattaforma ha il proprio file in sites/<progetto>.caddy (vedi docs/INTEGRAZIONE.md).
+# Dopo una modifica: scripts/aggiorna.sh sul server (valida e ricarica senza downtime).
+
+{
+	email {$ACME_EMAIL}
+	# Solo Let's Encrypt (senza fallback ZeroSSL). Per le prove usare lo staging in .env.
+	acme_ca {$ACME_CA:https://acme-v02.api.letsencrypt.org/directory}
+}
+
+# Impostazioni comuni a tutti i siti: `import comune` dentro ogni blocco sito
+(comune) {
+	encode zstd gzip
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		-Server
+	}
+	log {
+		output stdout
+		format json
+	}
+}
+
+import sites/*.caddy

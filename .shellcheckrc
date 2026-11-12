@@ -1,0 +1,3 @@
+# Gli script includono scripts/_comune.sh con percorso relativo alla root del repo
+external-sources=true
+source-path=SCRIPTDIR/..

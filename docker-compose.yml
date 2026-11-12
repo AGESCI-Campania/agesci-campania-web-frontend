@@ -1,0 +1,35 @@
+services:
+  caddy:
+    # Versione fissata: aggiornarla qui (mai :latest) e distribuirla con scripts/aggiorna.sh
+    image: docker.io/library/caddy:2.11.9-alpine
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"   # HTTP/3
+    volumes:
+      # Si monta la cartella, non il singolo Caddyfile: con un bind mount di un file
+      # singolo, `git pull` sostituisce l'inode e il container continua a vedere il vecchio.
+      - ./caddy:/etc/caddy:ro
+      - caddy_data:/data      # certificati Let's Encrypt e chiavi ACME — da includere nei backup
+      - caddy_config:/config
+    networks:
+      - agesci-proxy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:2019/config/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+networks:
+  # Rete condivisa con tutti i progetti; creata da scripts/installa.sh
+  agesci-proxy:
+    external: true
+    name: agesci-proxy
+
+volumes:
+  caddy_data:
+  caddy_config:

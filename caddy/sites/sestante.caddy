@@ -1,0 +1,6 @@
+# Sestante — Identity Provider SSO (Authentik)
+# Repo: https://github.com/AGESCI-Campania/sestante
+auth.agescicampania.org {
+	import comune
+	reverse_proxy sestante-server:9000
+}
