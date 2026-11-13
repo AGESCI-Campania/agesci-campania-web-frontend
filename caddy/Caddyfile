@@ -1,4 +1,4 @@
-# Caddyfile — reverse proxy unico per le piattaforme *.agescicampania.org
+# Caddyfile — reverse proxy unico per le piattaforme *.agescicampania.net
 #
 # Ogni piattaforma ha il proprio file in sites/<progetto>.caddy (vedi docs/INTEGRAZIONE.md).
 # Dopo una modifica: scripts/aggiorna.sh sul server (valida e ricarica senza downtime).

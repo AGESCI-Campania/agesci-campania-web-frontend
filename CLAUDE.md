@@ -5,7 +5,7 @@ Riferimento di continuità per Claude Code.
 ## Cos'è
 
 Reverse proxy unico (Caddy in Docker) del server che ospita le piattaforme
-`*.agescicampania.org`: Sestante (SSO, Authentik), Plancia, nota spese, Tana e future.
+`*.agescicampania.net`: Sestante (SSO, Authentik), Plancia, nota spese, Tana e future.
 Server dedicato configurato da zero, senza Virtualmin; ogni progetto è clonato in
 `/opt/<nome-repo>`. Questo repo contiene solo configurazione, nessuna applicazione.
 

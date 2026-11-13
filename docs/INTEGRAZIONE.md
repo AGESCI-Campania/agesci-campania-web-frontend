@@ -1,6 +1,6 @@
 # Integrazione di un progetto con il frontend web AGESCI Campania
 
-Istruzioni per chi sviluppa o mantiene una piattaforma pubblicata su `*.agescicampania.org`
+Istruzioni per chi sviluppa o mantiene una piattaforma pubblicata su `*.agescicampania.net`
 (Sestante, Plancia, nota spese, Tana, …), **in particolare per gli agenti Claude Code che
 lavorano nei repository dei singoli progetti**. Leggere per intero prima di modificare
 Docker Compose, nginx, impostazioni HTTP/HTTPS o script di deploy di un progetto.
@@ -9,6 +9,15 @@ Sorgente: `docs/INTEGRAZIONE.md` nel repo
 [`AGESCI-Campania/agesci-campania-web-frontend`](https://github.com/AGESCI-Campania/agesci-campania-web-frontend).
 Versione sempre aggiornata, leggibile senza autenticazione:
 <https://raw.githubusercontent.com/AGESCI-Campania/agesci-campania-web-frontend/main/docs/INTEGRAZIONE.md>
+
+> **Dominio**: tutte le piattaforme sono pubblicate su **`*.agescicampania.net`**, non più
+> su `agescicampania.org` (abbandonato per un problema con il registrar, prima di andare in
+> produzione). Se un progetto contiene ancora riferimenti a `.org`, va aggiornato ogni
+> **nome host / URL** `*.agescicampania.org`
+> (host consentiti, origini CSRF, base URL, issuer/discovery OIDC di Sestante, redirect URI
+> OAuth registrati presso Google/Microsoft/Apple, dominio del `Site` Django, documentazione)
+> e ogni **indirizzo email** `@agescicampania.org`, che passa a `@agescicampania.net`
+> (mittenti, destinatari, account SMTP/OAuth, admin, dati iniziali, fixture).
 
 ---
 
@@ -97,8 +106,8 @@ dell'nginx interno.
 ```python
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 USE_X_FORWARDED_HOST = True
-ALLOWED_HOSTS = ["plancia.agescicampania.org"]
-CSRF_TRUSTED_ORIGINS = ["https://plancia.agescicampania.org"]
+ALLOWED_HOSTS = ["plancia.agescicampania.net"]
+CSRF_TRUSTED_ORIGINS = ["https://plancia.agescicampania.net"]
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 # SECURE_SSL_REDIRECT non necessario (lo fa Caddy); se attivo funziona solo con
@@ -115,7 +124,7 @@ questo repo** (`agesci-campania-web-frontend`), non nel repo del progetto:
 
 ```caddy
 # Plancia — https://github.com/AGESCI-Campania/plancia
-plancia.agescicampania.org {
+plancia.agescicampania.net {
 	import comune
 	reverse_proxy plancia-nginx:80
 }
@@ -166,13 +175,13 @@ committati con il bit eseguibile).
 ## 4. Procedura di messa in produzione di un progetto
 
 1. Sul server, `agesci-campania-web-frontend` già installato (rete `agesci-proxy` esistente).
-2. DNS: `<sottodominio>.agescicampania.org` → IP del server.
+2. DNS: `<sottodominio>.agescicampania.net` → IP del server.
 3. `git clone` del progetto in `/opt/<repo>` e `scripts/installa.sh`.
 4. Aggiungere `caddy/sites/<progetto>.caddy` a questo repo, commit e push, poi sul server
    `/opt/agesci-campania-web-frontend/scripts/aggiorna.sh`.
-5. Verificare: `curl -I https://<sottodominio>.agescicampania.org`, login, redirect, upload.
+5. Verificare: `curl -I https://<sottodominio>.agescicampania.net`, login, redirect, upload.
 
-Se il progetto usa il login SSO di **Sestante** (`https://auth.agescicampania.org`), il
+Se il progetto usa il login SSO di **Sestante** (`https://auth.agescicampania.net`), il
 Provider OIDC si configura nel repo `AGESCI-Campania/sestante` come blueprint: chiedere
 all'utente, non crearlo a mano.
 
@@ -191,7 +200,7 @@ all'utente, non crearlo a mano.
 
 | Progetto | Sottodominio | Alias su `agesci-proxy` | Porta debug su 127.0.0.1 |
 |---|---|---|---|
-| Sestante | `auth.agescicampania.org` | `sestante-server:9000` | 9000 |
-| Plancia | `plancia.agescicampania.org` | da definire | — |
+| Sestante | `auth.agescicampania.net` | `sestante-server:9000` | 9000 |
+| Plancia | `plancia.agescicampania.net` | da definire | — |
 
 Aggiornare la tabella quando si aggiunge un progetto (stesso commit del file in `sites/`).

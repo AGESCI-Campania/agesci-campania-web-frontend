@@ -6,7 +6,7 @@
 ![Docker Compose](https://img.shields.io/badge/deploy-Docker%20Compose-2496ED.svg)
 
 Reverse proxy unico ([Caddy](https://caddyserver.com)) per le piattaforme web di AGESCI
-Campania su `*.agescicampania.org`: termina HTTPS con certificati Let's Encrypt automatici e
+Campania su `*.agescicampania.net`: termina HTTPS con certificati Let's Encrypt automatici e
 inoltra il traffico ai progetti (Sestante, Plancia, …) tramite la rete Docker `agesci-proxy`.
 
 ## Struttura
