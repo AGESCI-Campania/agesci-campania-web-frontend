@@ -106,14 +106,23 @@ TimeoutStartSec=300
 [Install]
 WantedBy=multi-user.target
 EOF
-	if [[ -f "$file" ]] && cmp -s "$tmp" "$file"; then
-		info "Unit systemd ${nome}.service già aggiornata."
-	else
-		info "Installo la unit systemd ${nome}.service."
-		come_root install -m 644 "$tmp" "$file"
-		come_root systemctl daemon-reload
+	if [[ -f "$file" ]] && cmp -s "$tmp" "$file" && systemctl is-enabled --quiet "${nome}.service" 2>/dev/null; then
+		rm -f "$tmp"
+		info "Unit systemd ${nome}.service già installata e aggiornata."
+		return 0
 	fi
+	# L'utente delle app (es. agesci) di norma non è sudoer: in quel caso non si fallisce,
+	# si indica il comando che l'amministratore deve eseguire (rigenera la stessa unit come root).
+	if (( EUID != 0 )) && ! sudo -n true 2>/dev/null; then
+		rm -f "$tmp"
+		avviso "La unit systemd ${nome}.service va installata o aggiornata da un amministratore:"
+		avviso "  sudo bash -c 'cd ${dir} && source scripts/_comune.sh && installa_servizio_systemd ${nome}${dipendenze}'"
+		return 0
+	fi
+	info "Installo la unit systemd ${nome}.service."
+	come_root install -m 644 "$tmp" "$file"
 	rm -f "$tmp"
+	come_root systemctl daemon-reload
 	come_root systemctl enable --quiet "${nome}.service"
 }
 

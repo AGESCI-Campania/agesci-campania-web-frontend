@@ -185,7 +185,11 @@ Comandi utili: `systemctl status <nome-repo>`, `systemctl restart <nome-repo>` (
 ## 3. Script di installazione e aggiornamento (obbligatori)
 
 Ogni progetto ha due script in `scripts/`, eseguiti sul server dalla root del repo
-(`/opt/<repo>`). Possono riusare le funzioni di `scripts/_comune.sh` di questo repo
+(`/opt/<repo>`) dall'utente **`agesci`**: proprietario dei repo, nel gruppo `docker`,
+**senza sudo**. Gli script non devono quindi richiedere root (niente `sudo` diretto, niente
+scritture fuori dal repo); l'unica eccezione è la unit systemd, gestita da
+`installa_servizio_systemd`, che senza sudo stampa il comando da far eseguire
+all'amministratore e prosegue. Possono riusare le funzioni di `scripts/_comune.sh` di questo repo
 (copiandolo nel progetto: rete, `.env`, attesa healthcheck, controllo variabili nuove).
 
 ### `scripts/installa.sh` — prima installazione

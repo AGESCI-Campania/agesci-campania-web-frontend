@@ -45,7 +45,9 @@ installa_servizio_systemd "${UNIT_PROXY%.service}"
 
 cat <<EOF
 
-Caddy è attivo e partirà al boot (systemctl status ${UNIT_PROXY}). Promemoria:
+Caddy è attivo. Promemoria:
+  - avvio al boot: systemctl status ${UNIT_PROXY} (se sopra è indicato un comando
+    per l'amministratore, va eseguito da un utente sudoer)
   - firewall: porte 80/tcp, 443/tcp e 443/udp aperte verso Internet
   - DNS: ogni sottodominio in caddy/sites/ deve puntare a questo server, altrimenti
     Let's Encrypt non può emettere il certificato (vedi: docker compose logs -f caddy)
