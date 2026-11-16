@@ -19,6 +19,10 @@ Server dedicato configurato da zero, senza Virtualmin; ogni progetto è clonato 
 - Gli nginx interni dei progetti restano, solo HTTP, e inoltrano `X-Forwarded-Proto` ricevuto
   da Caddy (non `$scheme`).
 - Ogni progetto (anche questo) ha `scripts/installa.sh` e `scripts/aggiorna.sh`.
+- Avvio al boot: `restart: unless-stopped` su tutti i servizi **più** una unit systemd
+  oneshot (`docker compose up -d --wait`, senza `ExecStop`) generata da
+  `installa_servizio_systemd` in `scripts/_comune.sh`; le unit dei progetti hanno
+  `Wants=`/`After=` su `agesci-campania-web-frontend.service`.
 - `docs/INTEGRAZIONE.md` è il contratto verso gli altri progetti: se cambia una regola qui
   (rete, alias, header, script), aggiornarlo nello stesso commit.
 

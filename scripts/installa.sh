@@ -40,9 +40,12 @@ docker compose pull
 docker compose up -d
 attendi_salute 60 caddy
 
+# --- Avvio automatico al boot ---
+installa_servizio_systemd "${UNIT_PROXY%.service}"
+
 cat <<EOF
 
-Caddy è attivo. Promemoria:
+Caddy è attivo e partirà al boot (systemctl status ${UNIT_PROXY}). Promemoria:
   - firewall: porte 80/tcp, 443/tcp e 443/udp aperte verso Internet
   - DNS: ogni sottodominio in caddy/sites/ deve puntare a questo server, altrimenti
     Let's Encrypt non può emettere il certificato (vedi: docker compose logs -f caddy)

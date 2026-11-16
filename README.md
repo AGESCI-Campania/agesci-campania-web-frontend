@@ -16,7 +16,7 @@ inoltra il traffico ai progetti (Sestante, Plancia, …) tramite la rete Docker 
 | `docker-compose.yml` | Servizio Caddy (versione fissata), rete esterna `agesci-proxy` |
 | `caddy/Caddyfile` | Opzioni globali (ACME) e snippet `comune` |
 | `caddy/sites/*.caddy` | Un file per piattaforma |
-| `scripts/installa.sh` | Prima installazione: rete, `.env`, avvio |
+| `scripts/installa.sh` | Prima installazione: rete, `.env`, avvio, unit systemd |
 | `scripts/aggiorna.sh` | `git pull`, validazione, aggiornamento immagine, reload senza downtime |
 | `docs/INTEGRAZIONE.md` | **Regole per collegare un progetto** (da dare agli agenti degli altri repo) |
 
@@ -29,8 +29,13 @@ git clone https://github.com/AGESCI-Campania/agesci-campania-web-frontend.git /o
 /opt/agesci-campania-web-frontend/scripts/installa.sh
 ```
 
-Prerequisiti: Docker con Compose v2, porte 80/tcp, 443/tcp, 443/udp aperte, DNS dei
-sottodomini puntato al server.
+Prerequisiti: Docker con Compose v2, systemd, utente root o con `sudo`, porte 80/tcp,
+443/tcp, 443/udp aperte, DNS dei sottodomini puntato al server.
+
+Lo script installa e abilita la unit systemd `agesci-campania-web-frontend.service`, che
+avvia Caddy al boot; le unit degli altri progetti partono dopo di essa
+(vedi [`docs/INTEGRAZIONE.md`](docs/INTEGRAZIONE.md) § 2.7). Stato:
+`systemctl status agesci-campania-web-frontend`.
 
 ## Aggiornamento
 

@@ -137,6 +137,51 @@ plancia.agescicampania.net {
 - Il file va aggiunto e deployato (`scripts/aggiorna.sh` di questo repo) **dopo** che il
   container del progetto è attivo sulla rete e il DNS punta al server.
 
+### 2.7 Avvio automatico al boot
+
+Due meccanismi complementari, entrambi obbligatori:
+
+- **Restart policy**: **ogni** servizio del compose (non solo quello d'ingresso) ha
+  `restart: unless-stopped`. È ciò che riavvia i container dopo un crash o un riavvio del
+  demone Docker.
+- **Unit systemd** `/etc/systemd/system/<nome-repo>.service`, installata e abilitata da
+  `scripts/installa.sh` (e reinstallata da `scripts/aggiorna.sh` se cambia) tramite la
+  funzione `installa_servizio_systemd` di `scripts/_comune.sh`. Al boot esegue
+  `docker compose up -d --wait` nella directory del repo, **dopo** il reverse proxy:
+
+```bash
+installa_servizio_systemd "<nome-repo>" "$UNIT_PROXY"   # UNIT_PROXY è definita in _comune.sh
+```
+
+  Se il progetto dipende da un altro progetto per avviarsi, aggiungere anche la sua unit
+  (es. `sestante.service`). Il login SSO via Sestante **non** è una dipendenza d'avvio:
+  serve solo a runtime.
+
+La unit generata (non scriverla a mano, non aggiungere `Requires=`, `ExecStop=` o
+`docker compose down`):
+
+```ini
+[Unit]
+Wants=docker.service network-online.target agesci-campania-web-frontend.service
+After=docker.service network-online.target agesci-campania-web-frontend.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/opt/<nome-repo>
+ExecStart=/usr/bin/docker compose up -d --wait
+TimeoutStartSec=300
+```
+
+- `--wait` fa terminare la unit solo a servizi `healthy`: chi viene dopo (`After=`) trova
+  le dipendenze pronte. Per questo servono i `healthcheck` nel compose.
+- Niente `ExecStop`: allo spegnimento i container li ferma Docker. Per fermare un progetto
+  in manutenzione usare `docker compose stop`; al boot successivo la unit lo riavvia.
+- Niente cron `@reboot` né altri script di avvio.
+
+Comandi utili: `systemctl status <nome-repo>`, `systemctl restart <nome-repo>` (riesegue
+`up -d --wait`), `systemctl list-dependencies --after <nome-repo>`.
+
 ## 3. Script di installazione e aggiornamento (obbligatori)
 
 Ogni progetto ha due script in `scripts/`, eseguiti sul server dalla root del repo
@@ -156,7 +201,8 @@ Ogni progetto ha due script in `scripts/`, eseguiti sul server dalla root del re
 5. `docker compose pull` / `build`, `docker compose up -d`.
 6. Passi applicativi di primo avvio (migrazioni, `collectstatic`, dati iniziali, …).
 7. Attende che i servizi siano `healthy` (servono `healthcheck` nel compose).
-8. Stampa i passi manuali residui, **incluso il blocco `caddy/sites/<progetto>.caddy`** da
+8. Installa e abilita la unit systemd (§ 2.7): `installa_servizio_systemd "<nome-repo>" "$UNIT_PROXY"`.
+9. Stampa i passi manuali residui, **incluso il blocco `caddy/sites/<progetto>.caddy`** da
    aggiungere a questo repo.
 
 ### `scripts/aggiorna.sh` — aggiornamento a una nuova release
@@ -168,6 +214,8 @@ Ogni progetto ha due script in `scripts/`, eseguiti sul server dalla root del re
 4. **Backup del database** prima di qualunque migrazione (in una cartella in `.gitignore`).
 5. `pull`/`build`, `up -d`, migrazioni, `collectstatic`, …
 6. Attende `healthy`; in caso di errore indica come consultare i log.
+7. Richiama `installa_servizio_systemd` (idempotente: installa la unit se manca, la
+   aggiorna se è cambiata).
 
 Entrambi: idempotenti dove possibile, `shellcheck` senza errori, eseguibili (`chmod +x`,
 committati con il bit eseguibile).
@@ -193,6 +241,8 @@ all'utente, non crearlo a mano.
 - [ ] nginx interno: `X-Forwarded-Proto $http_x_forwarded_proto`, `Host $host`
 - [ ] app: proxy SSL header, host consentiti, origini CSRF con `https://`
 - [ ] `healthcheck` sui servizi nel compose
+- [ ] `restart: unless-stopped` su **tutti** i servizi del compose
+- [ ] unit systemd installata da `installa_servizio_systemd` con dipendenza da `$UNIT_PROXY`
 - [ ] `scripts/installa.sh` e `scripts/aggiorna.sh` conformi al § 3
 - [ ] blocco `caddy/sites/<progetto>.caddy` preparato e consegnato all'utente
 

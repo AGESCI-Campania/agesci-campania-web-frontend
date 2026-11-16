@@ -32,4 +32,7 @@ attendi_salute 60 caddy
 info "Ricarico la configurazione (nuovi siti / modifiche ai sites/*.caddy)."
 docker compose exec -T caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
 
+# Installa la unit se manca (server installati prima della sua introduzione) o la aggiorna
+installa_servizio_systemd "${UNIT_PROXY%.service}"
+
 info "Aggiornamento completato. Log: docker compose logs -f caddy"
