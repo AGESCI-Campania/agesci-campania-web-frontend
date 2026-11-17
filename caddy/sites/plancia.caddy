@@ -1,0 +1,6 @@
+# Plancia — Guidoncini Verdi (Branca E/G)
+# Repo: https://github.com/AGESCI-Campania/plancia
+plancia.agescicampania.net {
+	import comune
+	reverse_proxy plancia-nginx:80
+}

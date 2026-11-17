@@ -255,6 +255,6 @@ all'utente, non crearlo a mano.
 | Progetto | Sottodominio | Alias su `agesci-proxy` | Porta debug su 127.0.0.1 |
 |---|---|---|---|
 | Sestante | `auth.agescicampania.net` | `sestante-server:9000` | 9000 |
-| Plancia | `plancia.agescicampania.net` | da definire | — |
+| Plancia | `plancia.agescicampania.net` | `plancia-nginx:80` | — |
 
 Aggiornare la tabella quando si aggiunge un progetto (stesso commit del file in `sites/`).
