@@ -1,0 +1,6 @@
+# Tana — Prenotazioni e sito della Base Scout «Gianni Sabatino»
+# Repo: https://github.com/AGESCI-Campania/prenotazionebase
+baseaiello.agescicampania.net {
+	import comune
+	reverse_proxy tana-nginx:80
+}

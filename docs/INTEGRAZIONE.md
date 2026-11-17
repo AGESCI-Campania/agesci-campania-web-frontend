@@ -256,5 +256,6 @@ all'utente, non crearlo a mano.
 |---|---|---|---|
 | Sestante | `auth.agescicampania.net` | `sestante-server:9000` | 9000 |
 | Plancia | `plancia.agescicampania.net` | `plancia-nginx:80` | — |
+| Tana | `baseaiello.agescicampania.net` | `tana-nginx:80` | — |
 
 Aggiornare la tabella quando si aggiunge un progetto (stesso commit del file in `sites/`).
