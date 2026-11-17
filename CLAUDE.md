@@ -36,7 +36,8 @@ Server dedicato configurato da zero, senza Virtualmin; ogni progetto è clonato 
 - Script bash: `set -euo pipefail`, funzioni condivise in `scripts/_comune.sh`, verificati con
   `shellcheck`, bit eseguibile committato.
 - Sintassi Caddyfile: indentazione con tab; validare con
-  `docker compose run --rm --no-deps caddy caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile`.
+  `docker compose run --rm --no-deps caddy caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile`
+  e controllare che `caddy fmt --diff` non segnali differenze (altrimenti `validate` dà un WARN).
 - `{$VAR:default}` in Caddy usa il default solo se la variabile **non è definita**: in `.env`
   le variabili opzionali vanno commentate, non lasciate vuote.
 

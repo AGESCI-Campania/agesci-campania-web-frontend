@@ -2,7 +2,6 @@
 #
 # Ogni piattaforma ha il proprio file in sites/<progetto>.caddy (vedi docs/INTEGRAZIONE.md).
 # Dopo una modifica: scripts/aggiorna.sh sul server (valida e ricarica senza downtime).
-
 {
 	email {$ACME_EMAIL}
 	# Solo Let's Encrypt (senza fallback ZeroSSL). Per le prove usare lo staging in .env.
